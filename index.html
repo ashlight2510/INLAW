@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>고부번역기 | funnyfunny.cloud</title>
+  <meta name="description" content="고부갈등을 ‘해결’하지 않습니다. 대신 말을 번역하고, 감정을 정리하고, 선택지를 제시합니다. (익명·저장 없음)" />
+
+  <!-- OG (영어 + 띄어쓰기 '+' 규칙) -->
+  <meta property="og:title" content="INLAW+TRANSLATOR" />
+  <meta property="og:description" content="Translate+meaning+offer+choices+stay+calm" />
+  <meta property="og:image" content="https://dummyimage.com/1200x630/0b1220/ffffff&text=INLAW+TRANSLATOR" />
+
+  <!-- Favicon (SVG data URI: 단일파일) -->
+  <link rel="icon" type="image/svg+xml"
+    href='data:image/svg+xml;utf8,
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+      <rect width="64" height="64" rx="14" fill="%230b1220"/>
+      <path d="M16 22h32v6H16zM16 34h22v6H16zM16 46h32v6H16z" fill="%23ffffff" opacity="0.92"/>
+      <circle cx="45" cy="37" r="6" fill="%23ff6b6b"/>
+    </svg>' />
+
+  <style>
+    :root{
+      --bg:#f7f8fa;
+      --card:#ffffff;
+      --text:#111;
+      --muted:#6b7280;
+      --primary:#0b1220;
+      --accent:#ff6b6b;
+      --line:#e5e7eb;
+      --soft:#f2f4f7;
+      --ok:#10b981;
+      --warn:#f59e0b;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:-apple-system,BlinkMacSystemFont,"Apple SD Gothic Neo","Noto Sans KR",Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+      background:var(--bg);
+      color:var(--text);
+    }
+    a{color:inherit;text-decoration:none}
+    .wrap{max-width:920px;margin:0 auto;padding:18px 14px 92px;}
+    header{
+      display:flex;align-items:center;justify-content:space-between;
+      gap:10px;margin-bottom:14px;
+    }
+    .brand{
+      display:flex;align-items:center;gap:10px;
+      font-weight:900;letter-spacing:0.2px;
+    }
+    .brand-badge{
+      width:34px;height:34px;border-radius:10px;background:var(--primary);
+      display:grid;place-items:center;color:#fff;font-weight:950;
+    }
+    .top-actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
+    .btn{
+      border:1px solid var(--line);
+      background:var(--card);
+      padding:10px 12px;
+      border-radius:12px;
+      cursor:pointer;
+      font-weight:750;
+      font-size:14px;
+      line-height:1;
+      display:inline-flex;gap:8px;align-items:center;justify-content:center;
+    }
+    .btn.primary{background:var(--primary);color:#fff;border-color:transparent}
+    .btn.ghost{background:transparent}
+    .btn:active{transform:translateY(1px)}
+    .intro{
+      border:1px solid var(--line);
+      background:linear-gradient(180deg, #fff 0%, #fff 60%, rgba(255,255,255,0) 100%);
+      border-radius:18px;
+      padding:18px;
+      margin-bottom:14px;
+    }
+    h1{margin:0 0 8px;font-size:22px;line-height:1.25}
+    .sub{margin:0;color:var(--muted);font-size:14px;line-height:1.6}
+    .pillrow{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+    .pill{
+      display:inline-flex;align-items:center;gap:6px;
+      padding:6px 10px;border-radius:999px;border:1px solid var(--line);
+      background:#fff;font-size:12px;color:#374151;font-weight:750;
+    }
+
+    .grid{
+      display:grid;grid-template-columns:1fr;gap:14px;
+    }
+    @media (min-width:920px){
+      .grid{grid-template-columns:1.35fr 0.65fr}
+    }
+    .panel{
+      border:1px solid var(--line);
+      background:var(--card);
+      border-radius:18px;
+      padding:16px;
+    }
+    .panel h2{
+      margin:0 0 10px;font-size:16px;display:flex;align-items:center;gap:8px;
+    }
+    .hint{color:var(--muted);font-size:13px;line-height:1.55;margin:0 0 12px}
+    .tabs{
+      display:flex;gap:8px;flex-wrap:wrap;margin:10px 0 14px;
+    }
+    .tab{
+      border:1px solid var(--line);
+      background:#fff;
+      padding:10px 12px;
+      border-radius:999px;
+      cursor:pointer;
+      font-weight:850;
+      font-size:13px;
+    }
+    .tab.active{background:rgba(11,18,32,0.06);border-color:rgba(11,18,32,0.35)}
+    .section{display:none}
+    .section.show{display:block}
+
+    .field{display:grid;gap:6px;margin-bottom:10px}
+    .label{
+      display:flex;align-items:center;gap:6px;
+      font-size:13px;color:#374151;font-weight:800;
+    }
+    textarea, select, input[type="text"]{
+      width:100%;
+      padding:12px 12px;
+      border-radius:14px;
+      border:1px solid var(--line);
+      background:#fff;
+      font-size:14px;
+      outline:none;
+      resize:vertical;
+      min-height:110px;
+      line-height:1.5;
+    }
+    select, input[type="text"]{min-height:auto}
+    textarea:focus, select:focus, input[type="text"]:focus{border-color:rgba(11,18,32,0.45)}
+    .row2{display:grid;grid-template-columns:1fr;gap:10px}
+    @media (min-width:720px){ .row2{grid-template-columns:1fr 1fr} }
+
+    .actions{
+      display:flex;gap:10px;flex-wrap:wrap;margin-top:10px;
+    }
+
+    .result{
+      margin-top:12px;
+      border-top:1px solid var(--line);
+      padding-top:12px;
+      display:none;
+    }
+    .result.show{display:block}
+    .cards{
+      display:grid;grid-template-columns:1fr;gap:12px;margin-top:12px;
+    }
+    @media (min-width:720px){ .cards{grid-template-columns:1fr 1fr} }
+    .card{
+      border:1px solid var(--line);
+      border-radius:18px;
+      background:#fff;
+      padding:14px;
+    }
+    .card .ct{
+      margin:0 0 10px;
+      font-weight:950;
+      font-size:14px;
+      display:flex;align-items:center;gap:8px;
+    }
+    .box{
+      padding:10px 12px;border-radius:14px;background:var(--soft);border:1px solid #eef0f3;
+      font-size:14px;line-height:1.6;color:#111;
+    }
+    .list{margin:0;padding-left:18px;font-size:14px;line-height:1.65}
+    .list li{margin:6px 0}
+    .tone-row{
+      display:flex;gap:8px;flex-wrap:wrap;
+    }
+    .tone{
+      border:1px solid var(--line);
+      background:#fff;
+      padding:10px 10px;border-radius:999px;
+      cursor:pointer;font-weight:900;font-size:13px;
+    }
+    .tone.active{background:rgba(11,18,32,0.06);border-color:rgba(11,18,32,0.35)}
+    .divider{height:1px;background:var(--line);margin:12px 0}
+    .note{
+      margin-top:10px;
+      padding:10px 12px;
+      background:#f5f7fa;
+      border:1px dashed var(--line);
+      border-radius:14px;
+      color:#374151;
+      font-size:13px;
+      line-height:1.55;
+    }
+    .aside{
+      border:1px solid var(--line);
+      background:#fff;border-radius:18px;
+      padding:16px;
+    }
+    .aside h3{margin:0 0 10px;font-size:14px;font-weight:950}
+    .aside .small{font-size:13px;color:#374151;line-height:1.6}
+    .shield{
+      border:1px solid rgba(245,158,11,0.25);
+      background:rgba(245,158,11,0.08);
+      padding:12px 12px;border-radius:16px;
+      color:#7c2d12;
+      font-weight:900;
+      line-height:1.55;
+      margin-bottom:10px;
+    }
+    .tiny{font-size:12px;color:var(--muted);line-height:1.5}
+    .footer-fixed{
+      position:fixed;left:0;right:0;bottom:0;
+      background:rgba(247,248,250,0.86);
+      backdrop-filter: blur(10px);
+      border-top:1px solid var(--line);
+      padding:10px 12px;
+    }
+    .footer-fixed .inner{
+      max-width:920px;margin:0 auto;display:flex;gap:10px;align-items:center;justify-content:space-between;
+      flex-wrap:wrap;
+    }
+    .toast{
+      position:fixed;left:50%;transform:translateX(-50%);
+      bottom:76px;background:#111;color:#fff;
+      padding:10px 12px;border-radius:999px;
+      font-size:13px;box-shadow:0 10px 30px rgba(0,0,0,0.22);
+      opacity:0;pointer-events:none;
+      transition:opacity .15s ease, transform .15s ease;
+    }
+    .toast.show{opacity:1;transform:translateX(-50%) translateY(-4px)}
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <header>
+      <div class="brand">
+        <div class="brand-badge">FF</div>
+        <div>
+          <div style="font-weight:950">고부번역기</div>
+          <div class="tiny">말을 번역하고 · 감정을 정리하고 · 선택지를 제시</div>
+        </div>
+      </div>
+      <div class="top-actions">
+        <button class="btn ghost" id="btnReset">초기화</button>
+        <a class="btn" href="https://funnyfunny.cloud" target="_blank" rel="noopener">다른 서비스 보기</a>
+      </div>
+    </header>
+
+    <section class="intro">
+      <h1>갈등을 “해결”하지 않습니다. 대신 번역합니다.</h1>
+      <p class="sub">
+        이 서비스는 상담/치료가 아니고, 누가 옳은지 판단하지 않습니다.<br/>
+        다만, 오가는 말을 <b>표면</b> / <b>속뜻(가능성)</b> / <b>대응 선택지</b>로 나눠서
+        지금의 부담을 줄여주는 <b>딸깍 도구</b>입니다.
+      </p>
+      <div class="pillrow">
+        <span class="pill">익명</span>
+        <span class="pill">저장 없음</span>
+        <span class="pill">편들기 없음</span>
+        <span class="pill">선택지 제공</span>
+      </div>
+    </section>
+
+    <div class="grid">
+      <section class="panel">
+        <h2>도구 선택</h2>
+        <p class="hint">아래 탭 중 하나를 선택하고, 문장을 붙여 넣은 뒤 “딸깍 번역”을 누르세요.</p>
+
+        <div class="tabs">
+          <button class="tab active" data-tab="t1" type="button">① 고부번역기</button>
+          <button class="tab" data-tab="t2" type="button">② 남편 중재 번역기</button>
+          <button class="tab" data-tab="t3" type="button">③ 오늘의 방패</button>
+        </div>
+
+        <!-- ① 고부번역기 -->
+        <div class="section show" id="t1">
+          <div class="row2">
+            <div class="field">
+              <div class="label">빠른 예시 선택(선택)</div>
+              <select id="sample1">
+                <option value="">예시를 골라 자동 입력</option>
+                <option value="요즘은 집에 너무 안 오네.">요즘은 집에 너무 안 오네.</option>
+                <option value="그렇게까지 바쁘면 결혼은 왜 했니?">그렇게까지 바쁘면 결혼은 왜 했니?</option>
+                <option value="애는 엄마가 키우는 건데… 요즘 방식은 모르겠다.">애는 엄마가 키우는 건데… 요즘 방식은 모르겠다.</option>
+                <option value="밥은 해 먹고 사니?">밥은 해 먹고 사니?</option>
+                <option value="나는 네가 싫어서가 아니라 걱정돼서 그래.">나는 네가 싫어서가 아니라 걱정돼서 그래.</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <div class="label">상황(선택)</div>
+              <select id="context1">
+                <option value="general">일상/대화</option>
+                <option value="visit">방문/명절/행사</option>
+                <option value="child">육아/교육</option>
+                <option value="house">집안일/생활</option>
+                <option value="money">금전/지원</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="field">
+            <div class="label">상대가 한 말</div>
+            <textarea id="input1" placeholder="예: 요즘은 집에 너무 안 오네"></textarea>
+          </div>
+
+          <div class="field">
+            <div class="label">내가 원하는 방향(톤 선택)</div>
+            <div class="tone-row" id="toneRow1">
+              <button class="tone active" data-tone="peace" type="button">😌 평화형</button>
+              <button class="tone" data-tone="neutral" type="button">😐 중립형</button>
+              <button class="tone" data-tone="boundary" type="button">🛡️ 선긋기형</button>
+            </div>
+          </div>
+
+          <div class="actions">
+            <button class="btn primary" id="btnRun1" type="button">딸깍 번역</button>
+            <button class="btn" id="btnCopy1" type="button">결과 요약 복사</button>
+          </div>
+
+          <div class="result" id="result1">
+            <div class="cards">
+              <div class="card">
+                <div class="ct">표면 의미</div>
+                <div class="box" id="surface1">-</div>
+              </div>
+              <div class="card">
+                <div class="ct">속뜻 번역(가능성)</div>
+                <ul class="list" id="hidden1"></ul>
+              </div>
+              <div class="card">
+                <div class="ct">추천 반응 3가지</div>
+                <ul class="list" id="responses1"></ul>
+              </div>
+              <div class="card">
+                <div class="ct">지금 행동 가이드</div>
+                <div class="box" id="guide1">-</div>
+              </div>
+            </div>
+
+            <div class="note">
+              <b>주의:</b> 이 결과는 “정답”이 아니라 “가능한 해석/선택지”입니다.
+              상황/관계/말투/누적된 감정에 따라 전혀 다를 수 있어요.
+            </div>
+          </div>
+        </div>
+
+        <!-- ② 남편 중재 번역기 -->
+        <div class="section" id="t2">
+          <div class="row2">
+            <div class="field">
+              <div class="label">빠른 예시 선택(선택)</div>
+              <select id="sample2">
+                <option value="">예시를 골라 자동 입력</option>
+                <option value="당신 엄마 때문에 너무 스트레스야.">당신 엄마 때문에 너무 스트레스야.</option>
+                <option value="난 혼자 싸우는 느낌이야.">난 혼자 싸우는 느낌이야.</option>
+                <option value="당신이 중간에서 정리해줬으면 좋겠어.">당신이 중간에서 정리해줬으면 좋겠어.</option>
+                <option value="내가 무시당하는 느낌이 들어.">내가 무시당하는 느낌이 들어.</option>
+              </select>
+            </div>
+            <div class="field">
+              <div class="label">목표(선택)</div>
+              <select id="goal2">
+                <option value="reduce">싸움 줄이기</option>
+                <option value="ask">도움 요청</option>
+                <option value="boundary">경계 세우기</option>
+                <option value="plan">앞으로의 규칙 만들기</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="field">
+            <div class="label">남편에게 하고 싶은 말(원문)</div>
+            <textarea id="input2" placeholder="예: 당신 엄마 때문에 너무 스트레스야"></textarea>
+          </div>
+
+          <div class="actions">
+            <button class="btn primary" id="btnRun2" type="button">딸깍 번역</button>
+            <button class="btn" id="btnCopy2" type="button">결과 요약 복사</button>
+          </div>
+
+          <div class="result" id="result2">
+            <div class="cards">
+              <div class="card">
+                <div class="ct">감정 제거 버전</div>
+                <div class="box" id="v2a">-</div>
+              </div>
+              <div class="card">
+                <div class="ct">설득 중심 버전</div>
+                <div class="box" id="v2b">-</div>
+              </div>
+              <div class="card">
+                <div class="ct">최소 충돌 버전</div>
+                <div class="box" id="v2c">-</div>
+              </div>
+              <div class="card">
+                <div class="ct">한 줄 요청(초단문)</div>
+                <div class="box" id="v2d">-</div>
+              </div>
+            </div>
+
+            <div class="note">
+              <b>팁:</b> “당신 엄마” 프레임은 방어를 부르기 쉬워요.
+              가능하면 <b>내 감정(나)</b> + <b>원하는 행동(요청)</b> 형태로 바꾸면 확률이 올라갑니다.
+            </div>
+          </div>
+        </div>
+
+        <!-- ③ 오늘의 방패 -->
+        <div class="section" id="t3">
+          <div class="shield" id="shieldText">-</div>
+          <div class="actions">
+            <button class="btn primary" id="btnNewShield" type="button">새 문장 뽑기</button>
+            <button class="btn" id="btnCopyShield" type="button">문장 복사</button>
+          </div>
+
+          <div class="divider"></div>
+
+          <div class="field">
+            <div class="label">상황에 맞게 살짝 바꾸기(선택)</div>
+            <input id="shieldHint" type="text" placeholder="예: 명절 / 방문 / 육아 / 말투 / 돈" />
+          </div>
+          <div class="actions">
+            <button class="btn" id="btnRewriteShield" type="button">내 상황 버전으로 변환</button>
+          </div>
+
+          <div class="result show" style="display:block">
+            <div class="note">
+              <b>사용법:</b> 오늘 하루 “선택지”를 늘리는 용도예요.  
+              싸움을 끝내려 하기보다, <b>내 템포를 지키는 문장</b> 하나만 챙기는 느낌으로 쓰면 좋습니다.
+            </div>
+          </div>
+        </div>
+
+        <div class="note">
+          <b>개인정보 안내:</b> 이 페이지는 입력 내용을 서버로 전송하지 않으며, 브라우저에 저장하지 않습니다.  
+          (단, “복사” 기능을 누르면 클립보드에만 복사됩니다.)
+        </div>
+      </section>
+
+      <aside class="aside">
+        <h3>한 번에 이해되는 규칙</h3>
+        <div class="small">
+          <ul class="list">
+            <li><b>정답 찾기</b>보다 <b>선택지 늘리기</b>가 목표</li>
+            <li><b>편들기</b> 대신 <b>가능성 번역</b></li>
+            <li><b>즉시 반응</b>보다 <b>시간 벌기</b>가 이득일 때가 많음</li>
+            <li>말을 “표면/속뜻/요청”으로 분리하면 감정 소모가 줄어듦</li>
+          </ul>
+        </div>
+        <div class="divider"></div>
+        <div class="tiny">
+          ⚠️ 위협/폭언/신체적 위험이 있거나, 극심한 스트레스가 지속된다면 주변 도움(가족/지인/전문기관)을 우선 고려하세요.
+        </div>
+      </aside>
+    </div>
+  </div>
+
+  <div class="footer-fixed">
+    <div class="inner">
+      <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+        <a class="btn" href="https://funnyfunny.cloud" target="_blank" rel="noopener">다른 서비스 보기</a>
+        <span class="tiny">© funnyfunny.cloud · single HTML</span>
+      </div>
+      <div class="tiny">고부번역기(가칭) · 중재/정리 도구</div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast">복사했어요</div>
+
+  <script>
+    // -----------------------------
+    // Utils
+    // -----------------------------
+    const $ = (id) => document.getElementById(id);
+
+    function toast(msg="완료!") {
+      const t = $("toast");
+      t.textContent = msg;
+      t.classList.add("show");
+      setTimeout(() => t.classList.remove("show"), 1100);
+    }
+
+    async function copyText(text){
+      try{
+        await navigator.clipboard.writeText(text);
+        toast("복사했어요");
+      }catch{
+        const ta = document.createElement("textarea");
+        ta.value = text;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand("copy");
+        document.body.removeChild(ta);
+        toast("복사했어요");
+      }
+    }
+
+    function pick(arr){
+      return arr[Math.floor(Math.random()*arr.length)];
+    }
+
+    function sanitize(s){
+      return String(s || "").trim().replace(/\s+/g," ");
+    }
+
+    // -----------------------------
+    // Tabs
+    // -----------------------------
+    const tabs = Array.from(document.querySelectorAll(".tab"));
+    const sections = ["t1","t2","t3"].map(id => $(id));
+
+    tabs.forEach(btn=>{
+      btn.addEventListener("click", ()=>{
+        const target = btn.dataset.tab;
+        tabs.forEach(t=>t.classList.toggle("active", t===btn));
+        sections.forEach(sec=>sec.classList.toggle("show", sec.id===target));
+        window.scrollTo({top:0, behavior:"smooth"});
+      });
+    });
+
+    // -----------------------------
+    // Tone (t1)
+    // -----------------------------
+    let tone1 = "peace";
+    const toneButtons1 = Array.from(document.querySelectorAll("#toneRow1 .tone"));
+    toneButtons1.forEach(b=>{
+      b.addEventListener("click", ()=>{
+        tone1 = b.dataset.tone;
+        toneButtons1.forEach(x=>x.classList.toggle("active", x===b));
+      });
+    });
+
+    // -----------------------------
+    // Content DB (MVP: rule-based + pattern-based)
+    // -----------------------------
+    const SURFACE_FALLBACKS = {
+      general: ["상대의 관찰/평가를 말로 꺼낸 상황", "관계의 거리감을 말로 확인하는 상황", "습관/방식의 차이를 드러내는 대화"],
+      visit: ["방문 빈도/예의를 기준으로 관계를 확인하는 상황", "가까움의 기준을 점검하는 상황", "행사/명절 전후로 민감도가 올라간 상황"],
+      child: ["육아 방식에 대한 세대 차이가 드러난 상황", "아이를 매개로 통제/걱정이 섞이기 쉬운 상황", "‘정답’이 충돌하는 대화"],
+      house: ["집안일/생활 방식 기준이 다른 상황", "역할 기대치가 떠오르는 상황", "‘원래 이렇게’ 프레임이 등장하는 상황"],
+      money: ["지원/돈 문제로 권한·거리감이 엮이는 상황", "‘도움’과 ‘간섭’의 경계가 흔들리는 상황", "감사/부담이 동시에 생기기 쉬운 대화"]
+    };
+
+    function analyzeHiddenIntents(text, context){
+      const t = text;
+
+      // lightweight heuristics
+      const flags = {
+        visit: /집|오네|안\s?와|안\s?오|언제\s?오|자주|명절|행사/.test(t),
+        worry: /걱정|그래도|몸|건강|밥|챙겨|살|피곤/.test(t),
+        compare: /요즘|요새|원래|우리\s?때|다들|다른\s?집/.test(t),
+        blame: /왜|그러면|그렇게|도대체|말이\s?되|결혼은\s?왜/.test(t),
+        child: /애|아이|육아|교육|학원|버릇|키우/.test(t),
+        boundary: /예의|도리|가족|며느리|시댁|집안/.test(t),
+        soften: /싫어서|그런\s?뜻\s?아니|미안|서운/.test(t),
+      };
+
+      const intents = [];
+
+      // core intents
+      if (flags.visit || context==="visit") {
+        intents.push("섭섭함: ‘자주 못 본다’는 감정이 깔려 있을 수 있어요.");
+        intents.push("관계 확인: 가까움의 기준을 다시 맞추고 싶을 수 있어요.");
+      }
+
+      if (flags.worry) {
+        intents.push("걱정 표현: 통제라기보다 ‘챙기고 싶음’일 가능성이 있어요.");
+      }
+
+      if (flags.compare) {
+        intents.push("세대 기준: ‘원래/우리 때’ 기준으로 안전함을 확보하려는 흐름일 수 있어요.");
+      }
+
+      if (flags.child || context==="child") {
+        intents.push("육아 개입 욕구: 도움과 간섭이 섞이기 쉬운 영역이라 민감도가 올라가요.");
+        intents.push("정체성 충돌: ‘좋은 엄마/좋은 어른’ 기준이 부딪힐 수 있어요.");
+      }
+
+      if (flags.boundary || context==="house" || context==="money") {
+        intents.push("경계선 이슈: 역할 기대치(도리/예의/가족)가 암묵적으로 등장할 수 있어요.");
+      }
+
+      if (flags.blame) {
+        intents.push("압박/통제 가능성: 질문 형태로 죄책감을 유도하는 말투일 수 있어요.");
+      }
+
+      if (flags.soften) {
+        intents.push("방어 장치: ‘싫어서가 아니라’로 갈등을 낮추려는 시도일 수 있어요.");
+      }
+
+      // fallback if too few
+      if (intents.length < 2) {
+        intents.push("감정 확인: 상대가 ‘내가 중요한가’를 확인하려는 흐름일 수 있어요.");
+        intents.push("거리감 조절: 관계의 온도를 다시 맞추고 싶은 신호일 수 있어요.");
+      }
+
+      // ensure uniqueness
+      return Array.from(new Set(intents)).slice(0, 5);
+    }
+
+    function surfaceMeaning(text, context){
+      const t = sanitize(text);
+      // try simple summary
+      if (!t) return pick(SURFACE_FALLBACKS[context] || SURFACE_FALLBACKS.general);
+      // short summary style
+      if (t.length <= 22) return `“${t}”라는 표현으로 현재 상태/기준을 언급한 상황`;
+      return `“${t.slice(0, 22)}…”로 현재 상태/기준을 언급한 상황`;
+    }
+
+    function buildResponses(text, context){
+      const t = sanitize(text);
+      // response bank (tone-based)
+      const peace = [
+        "요즘 일정이 좀 빡빡해서요. 다음엔 미리 연락드리고 조율해볼게요.",
+        "요즘 정신이 없었어요. 마음 쓰이게 했다면 미안해요. 일정 잡아볼게요.",
+        "말씀 고마워요. 요즘은 이렇게 지내고 있고, 가능한 날 미리 말씀드릴게요."
+      ];
+      const neutral = [
+        "요즘 바빴어요. 일정 정리되면 연락드릴게요.",
+        "이번 달은 일정이 많아서요. 다음에 맞춰볼게요.",
+        "요즘은 조금 정신이 없네요. 필요하면 미리 말씀드릴게요."
+      ];
+      const boundary = [
+        "저희 일정은 저희가 먼저 조율해볼게요. 정해지면 연락드릴게요.",
+        "방문은 미리 약속 잡고 가는 게 서로 편할 것 같아요.",
+        "지금은 일정이 불규칙해서요. 저희가 가능한 날에 먼저 말씀드릴게요."
+      ];
+
+      // context nuance
+      if (context === "child") {
+        peace[0] = "말씀 고마워요. 저희는 이렇게 해보려고 해요. 필요하면 도움 부탁드릴게요.";
+        neutral[0] = "저희는 일단 이렇게 해보려 해요.";
+        boundary[0] = "육아 방식은 저희가 정해서 해볼게요. 필요한 부분만 도움 요청드릴게요.";
+      }
+      if (context === "money") {
+        peace[0] = "마음 써주셔서 고마워요. 저희끼리 먼저 정리해보고 말씀드릴게요.";
+        neutral[0] = "저희가 먼저 정리해볼게요.";
+        boundary[0] = "금전 관련은 저희가 기준을 정해서 관리할게요.";
+      }
+      if (context === "visit") {
+        boundary[1] = "방문은 서로 편하게 미리 약속 잡고 가는 방식으로 할게요.";
+      }
+
+      // if text looks harsh, add time-buffer suggestion in list
+      const harsh = /(결혼은\s?왜|도대체|말이\s?돼|그렇게까지|너무|왜\s?이래)/.test(t);
+
+      const guide = harsh
+        ? "지금은 즉시 반응보다 ‘시간 벌기’가 이득일 가능성이 커요. 짧게 받고, 나중에 톤을 정리해서 답하는 편이 안전합니다."
+        : "상대 말의 의도를 ‘단정’하지 말고, 필요한 만큼만 받아치면 피로도가 줄어요. 오늘은 짧게, 내일 더 정리해도 됩니다.";
+
+      return { peace, neutral, boundary, guide };
+    }
+
+    // -----------------------------
+    // Feature ① In-law Translator
+    // -----------------------------
+    $("sample1").addEventListener("change", (e)=>{
+      const v = e.target.value;
+      if (v) $("input1").value = v;
+    });
+
+    $("btnRun1").addEventListener("click", ()=>{
+      const text = sanitize($("input1").value);
+      const context = $("context1").value;
+
+      if (!text){
+        toast("문장을 한 줄만 넣어줘요");
+        return;
+      }
+
+      // surface
+      $("surface1").textContent = surfaceMeaning(text, context);
+
+      // hidden intents
+      const intents = analyzeHiddenIntents(text, context);
+      $("hidden1").innerHTML = intents.map(x => `<li>${x}</li>`).join("");
+
+      // responses
+      const pack = buildResponses(text, context);
+      const list = (tone1 === "peace") ? pack.peace
+                : (tone1 === "neutral") ? pack.neutral
+                : pack.boundary;
+
+      // Always show 3, but make them feel varied
+      const three = [list[0], list[1], list[2]];
+      $("responses1").innerHTML = three.map(x => `<li>${x}</li>`).join("");
+
+      // guide
+      $("guide1").textContent = pack.guide;
+
+      $("result1").classList.add("show");
+      $("result1").scrollIntoView({behavior:"smooth", block:"start"});
+    });
+
+    $("btnCopy1").addEventListener("click", ()=>{
+      const text = sanitize($("input1").value);
+      if (!text){ toast("먼저 번역할 문장을 넣어줘요"); return; }
+      if (!$("result1").classList.contains("show")){ toast("먼저 딸깍 번역을 눌러줘요"); return; }
+
+      const surface = $("surface1").textContent;
+      const intents = Array.from($("hidden1").querySelectorAll("li")).map(li=>`- ${li.textContent}`).join("\n");
+      const responses = Array.from($("responses1").querySelectorAll("li")).map((li,i)=>`${i+1}) ${li.textContent}`).join("\n");
+      const guide = $("guide1").textContent;
+
+      const out =
+`고부번역기 (요약)
+[원문]
+"${text}"
+
+[표면 의미]
+${surface}
+
+[속뜻(가능성)]
+${intents}
+
+[추천 반응 3가지]
+${responses}
+
+[가이드]
+${guide}
+
+https://funnyfunny.cloud`;
+      copyText(out);
+    });
+
+    // -----------------------------
+    // Feature ② Husband Mediator Translator
+    // -----------------------------
+    $("sample2").addEventListener("change", (e)=>{
+      const v = e.target.value;
+      if (v) $("input2").value = v;
+    });
+
+    function husbandVariants(raw, goal){
+      const t = sanitize(raw);
+      const hasYouMom = /당신\s?엄마|네\s?엄마|시어머/i.test(t);
+      const baseFeeling = hasYouMom
+        ? "어머님과의 관계에서 내가 많이 지치고 있어."
+        : "요즘 그 문제로 내가 많이 지치고 있어.";
+
+      const goalLine =
+        goal==="ask" ? "당신이 중간에서 한 번만 정리해주면 상황이 훨씬 나아질 것 같아."
+      : goal==="boundary" ? "우리 기준을 먼저 정하고, 그 기준으로 정리해줬으면 좋겠어."
+      : goal==="plan" ? "앞으로 기준을 정해두고 반복되지 않게 만들고 싶어."
+      : "지금은 싸움이 커지지 않게 정리하고 싶어.";
+
+      const vA = `${baseFeeling} 지금은 감정이 올라와서 말이 거칠어질까 봐 조심하고 있어.`;
+
+      const vB = `${baseFeeling} ${goalLine} 내가 원하는 건 ‘편들기’가 아니라 ‘정리’야.`;
+
+      const vC = `지금은 내가 직접 대화하기엔 여유가 없어. 대신 당신이 톤을 낮춰서 한 번만 중재해줄 수 있을까?`;
+
+      const vD = goal==="boundary"
+        ? "우리 기준으로 한 번만 정리해줘."
+        : goal==="plan"
+          ? "앞으로 기준을 같이 정해보자."
+          : "지금 이건 당신 도움이 필요해.";
+
+      return {vA, vB, vC, vD};
+    }
+
+    $("btnRun2").addEventListener("click", ()=>{
+      const text = sanitize($("input2").value);
+      const goal = $("goal2").value;
+
+      if (!text){
+        toast("원문을 한 줄만 넣어줘요");
+        return;
+      }
+
+      const {vA,vB,vC,vD} = husbandVariants(text, goal);
+      $("v2a").textContent = vA;
+      $("v2b").textContent = vB;
+      $("v2c").textContent = vC;
+      $("v2d").textContent = vD;
+
+      $("result2").classList.add("show");
+      $("result2").scrollIntoView({behavior:"smooth", block:"start"});
+    });
+
+    $("btnCopy2").addEventListener("click", ()=>{
+      const text = sanitize($("input2").value);
+      if (!text){ toast("먼저 원문을 넣어줘요"); return; }
+      if (!$("result2").classList.contains("show")){ toast("먼저 딸깍 번역을 눌러줘요"); return; }
+
+      const out =
+`남편 중재 번역기 (요약)
+[원문]
+"${text}"
+
+[감정 제거]
+- ${$("v2a").textContent}
+
+[설득 중심]
+- ${$("v2b").textContent}
+
+[최소 충돌]
+- ${$("v2c").textContent}
+
+[초단문]
+- ${$("v2d").textContent}
+
+https://funnyfunny.cloud`;
+      copyText(out);
+    });
+
+    // -----------------------------
+    // Feature ③ Daily Shield
+    // -----------------------------
+    const SHIELDS = [
+      "지금은 이해받기보다, 내 템포를 지키는 날.",
+      "침묵은 회피가 아니라 선택일 수 있음.",
+      "상대의 감정은 내 책임이 아니다.",
+      "정답을 증명하려 하지 말고, 손상을 줄이자.",
+      "말을 바로잡기보다, 내 경계를 먼저 세우자.",
+      "오늘은 짧게. 내일 더 잘 말할 수 있다.",
+      "모든 어른이 현명하진 않다. 나는 내 방식으로 산다.",
+      "관계는 승패가 아니라, 회복 가능성이 중요하다.",
+      "지금 필요한 건 반박이 아니라, 시간 벌기.",
+      "내가 과민한 게 아니라, 누적이 있었던 것일 수 있다."
+    ];
+
+    function newShield(){
+      $("shieldText").textContent = pick(SHIELDS);
+    }
+
+    $("btnNewShield").addEventListener("click", newShield);
+
+    $("btnCopyShield").addEventListener("click", ()=>{
+      const s = $("shieldText").textContent.trim();
+      if (!s || s === "-"){ toast("먼저 문장을 뽑아줘요"); return; }
+      copyText(s);
+    });
+
+    $("btnRewriteShield").addEventListener("click", ()=>{
+      const s = $("shieldText").textContent.trim();
+      const hint = sanitize($("shieldHint").value);
+      if (!s || s === "-"){ toast("먼저 문장을 뽑아줘요"); return; }
+      if (!hint){ toast("상황 키워드를 한 단어만 넣어줘요"); return; }
+
+      // simple rewrite templates
+      const variants = [
+        `(${hint})에서는 “정답”보다 “손상 최소화”가 우선.`,
+        `(${hint})은 민감 구간. 오늘은 내 템포를 지키자.`,
+        `(${hint})은 짧게 말해도 되는 날. 내일 더 잘하면 된다.`,
+        `(${hint})에서는 경계가 예의가 될 수 있다.`,
+      ];
+      $("shieldText").textContent = `${s}  ${pick(variants)}`;
+      toast("변환했어요");
+    });
+
+    // -----------------------------
+    // Reset
+    // -----------------------------
+    $("btnReset").addEventListener("click", ()=>{
+      // tabs back to t1
+      tabs.forEach(t=>t.classList.toggle("active", t.dataset.tab==="t1"));
+      sections.forEach(sec=>sec.classList.toggle("show", sec.id==="t1"));
+
+      // clear inputs/results
+      $("input1").value = "";
+      $("context1").value = "general";
+      $("sample1").value = "";
+      tone1 = "peace";
+      toneButtons1.forEach(b=>b.classList.toggle("active", b.dataset.tone==="peace"));
+      $("result1").classList.remove("show");
+      $("hidden1").innerHTML = "";
+      $("responses1").innerHTML = "";
+      $("surface1").textContent = "-";
+      $("guide1").textContent = "-";
+
+      $("input2").value = "";
+      $("sample2").value = "";
+      $("goal2").value = "reduce";
+      $("result2").classList.remove("show");
+      $("v2a").textContent = "-";
+      $("v2b").textContent = "-";
+      $("v2c").textContent = "-";
+      $("v2d").textContent = "-";
+
+      $("shieldHint").value = "";
+      newShield();
+
+      toast("초기화!");
+      window.scrollTo({top:0, behavior:"smooth"});
+    });
+
+    // boot
+    newShield();
+  </script>
+</body>
+</html>
